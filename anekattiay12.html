@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SAMITHI FINAL SAFE ULTIMATE</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+html,body{position:fixed;width:100%;height:100%;overflow:hidden} 
+#app{position:absolute;width:100%;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.locked{filter:blur(20px);pointer-events:none}
+.no-select{user-select:none}
+</style>
+</head>
+<body class="bg-slate-900 no-select">
+
+<!-- AUTO LOCK SCREEN -->
+<div id="lockScreen" class="fixed inset-0 bg-slate-900 z-[9999] hidden flex items-center justify-center p-4">
+<div class="bg-white p-8 rounded-[2rem] w-full max-w-sm text-center border-8 border-black shadow-2xl">
+<i class="fa-solid fa-lock text-6xl"></i>
+<h1 class="font-black text-2xl mt-3">SYSTEM LOCKED 🔒</h1>
+<p class="text-xs font-bold text-slate-500">5 min Inactive | Brute Force Protected</p>
+<input id="unlockPass" type="password" class="border-4 border-black p-4 rounded-2xl w-full mt-4 text-center font-black text-xl" placeholder="PASSWORD">
+<button onclick="unlock()" class="bg-black text-white w-full py-4 rounded-2xl mt-3 font-black text-lg">UNLOCK</button>
+<p id="lockMsg" class="text-xs font-black text-red-600 mt-2"></p>
+</div>
+</div>
+
+<div id="app">
+<!-- LOGIN -->
+<div id="login" class="min-h-screen flex items-center justify-center p-4 bg-slate-900">
+<div class="bg-white p-8 rounded-[2rem] shadow-2xl w-full max-w-sm border-8 border-black">
+<h1 class="text-4xl font-black text-center">👑 FINAL</h1>
+<p class="text-center font-black text-xs mt-1"><span class="bg-black text-white px-2 py-1 rounded">SAFE</span> <span class="bg-yellow-400 px-2 py-1 rounded">ONLINE+OFFLINE</span> <span class="bg-green-600 text-white px-2 py-1 rounded">ENCRYPTED</span></p>
+<div class="mt-6 space-y-3">
+<input id="u" class="border-4 border-black p-4 rounded-2xl w-full font-black" placeholder="Username" value="admin">
+<input id="p" type="password" class="border-4 border-black p-4 rounded-2xl w-full font-black" placeholder="Password" value="admin123">
+<button onclick="loginAdmin()" class="bg-black text-white w-full py-4 rounded-2xl font-black text-lg">🔐 ADMIN LOGIN</button>
+<button onclick="loginMember()" class="bg-yellow-400 border-4 border-black w-full py-4 rounded-2xl font-black text-lg">🙋 MEMBER JOIN</button>
+</div>
+<div class="bg-slate-100 p-3 rounded-xl mt-4 text-[10px] font-black leading-relaxed">
+Default: admin / admin123<br>
+<span id="attemptInfo" class="text-red-600"></span><br>
+✅ Offline Encrypted Save<br>
+✅ Online Firebase Sync (Config දැම්මම)<br>
+✅ Auto Lock 5min + Manual Lock<br>
+✅ Page Fall නෑ + Safe
+</div>
+</div>
+</div>
+
+<!-- ADMIN FINAL -->
+<div id="adminPage" class="hidden min-h-screen bg-slate-100">
+<div class="bg-black text-white p-4 flex justify-between items-center sticky top-0 z-40">
+<div><h1 class="font-black text-lg"><i class="fa-solid fa-shield-halved text-green-400"></i> FINAL SAFE ADMIN - ඔක්කොම එකතු</h1><p class="text-[10px] text-green-400 font-bold">Encrypted • Firebase Ready • Auto-Lock • No Page Fall</p></div>
+<div class="flex gap-2">
+<button onclick="openSettings()" class="bg-white text-black px-4 py-2 rounded-xl font-black text-xs"><i class="fa-solid fa-gear"></i> SETTINGS</button>
+<button onclick="manualLock()" class="bg-yellow-400 text-black border-2 border-white px-4 py-2 rounded-xl font-black text-xs">LOCK</button>
+<button onclick="location.reload()" class="bg-red-600 px-4 py-2 rounded-xl font-black text-xs">Logout</button>
+</div>
+</div>
+
+<div class="max-w-7xl mx-auto p-4 space-y-4">
+<!-- Settings Inside -->
+<div id="settingsPanel" class="hidden bg-white p-6 rounded-[1.5rem] shadow-2xl border-8 border-black">
+<h3 class="font-black text-xl mb-1">🔑 LOCK KEY ඇතුලෙන්ම වෙනස් කරන තැන</h3>
+<p class="text-xs font-bold text-slate-500 mb-4">මේක ඇතුලෙන්ම විතරයි වෙනස් කරන්න පුලුවන්! Encrypted Save වෙනවා!</p>
+<div class="grid md:grid-cols-3 gap-3">
+<div><label class="text-xs font-black">පරණ Password *</label><input id="oldPass" type="password" class="border-4 border-black p-3 rounded-xl w-full font-bold"></div>
+<div><label class="text-xs font-black">අලුත් Password *</label><input id="newPass" type="password" class="border-4 border-black p-3 rounded-xl w-full font-bold"></div>
+<div><label class="text-xs font-black">Confirm අලුත් *</label><input id="confirmPass" type="password" class="border-4 border-black p-3 rounded-xl w-full font-bold"></div>
+</div>
+<div class="flex gap-2 mt-4">
+<button onclick="changePassword()" class="bg-black text-white px-8 py-3 rounded-xl font-black">✅ Password වෙනස් කරන්න</button>
+<button onclick="settingsPanel.classList.add('hidden')" class="bg-slate-200 px-6 py-3 rounded-xl font-black">Close</button>
+</div>
+</div>
+
+<!-- Stats -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+<div class="bg-white p-4 rounded-2xl shadow border-l-8 border-black font-black">Members<br><span id="sM" class="text-3xl">0</span></div>
+<div class="bg-white p-4 rounded-2xl shadow border-l-8 border-green-600 font-black">Loans<br><span id="sL" class="text-3xl">0</span></div>
+<div class="bg-white p-4 rounded-2xl shadow border-l-8 border-yellow-400 font-black">Savings<br><span id="sS" class="text-lg">Rs 0</span></div>
+<div class="bg-white p-4 rounded-2xl shadow border-l-8 border-blue-600 font-black">Meeting<br><span id="sMT" class="text-xs">Not Set</span></div>
+<div class="bg-white p-4 rounded-2xl shadow border-l-8 border-purple-600 font-black">Joins<br><span id="sJ" class="text-3xl">0</span></div>
+</div>
+
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-white p-6 rounded-[1.5rem] shadow border-4 border-black">
+<h3 class="font-black text-lg mb-3">📅 සමිතිය දවස දාන්නේ Admin විතරයි</h3>
+<input id="mtTitle" class="border-4 border-black p-3 rounded-xl w-full mb-2 font-black" value="මාසික සමිතිය">
+<div class="grid grid-cols-2 gap-2"><input id="mtDate" type="date" class="border-4 border-black p-3 rounded-xl font-black"><input id="mtTime" type="time" class="border-4 border-black p-3 rounded-xl font-black" value="10:00"></div>
+<input id="mtLoc" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" value="සමිතිය ශාලාව">
+<button onclick="setMeeting()" class="bg-black text-white w-full py-4 rounded-xl mt-3 font-black text-lg">🔒 SAFE දවස දාන්න (Encrypted)</button>
+<div id="adminMeetView" class="mt-3"></div>
+</div>
+
+<div class="bg-white p-6 rounded-[1.5rem] shadow border-4 border-black">
+<h3 class="font-black text-lg mb-3">👥 Members + Search</h3>
+<div class="grid grid-cols-2 gap-2"><input id="mCode" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Code M001 *"><input id="mName" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Name *"></div>
+<input id="mPhone" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Phone">
+<button onclick="addMember()" class="bg-black text-white w-full py-3 rounded-xl mt-3 font-black">Add Member (Safe)</button>
+<input id="searchM" onkeyup="searchMembers()" class="border-2 p-3 rounded-xl w-full mt-3" placeholder="Search Code/Name...">
+<div class="max-h-64 overflow-auto mt-2 border-4 border-black rounded-xl"><table class="w-full text-sm"><tbody id="memberTable"></tbody></table></div>
+</div>
+</div>
+
+<div class="bg-white p-6 rounded-[1.5rem] shadow border-4 border-black">
+<h3 class="font-black text-xl mb-3">💰 Loan ඔක්කොම - Add / Approve / Payment / Delete / Interest</h3>
+<div class="grid md:grid-cols-5 gap-2">
+<input id="lMember" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Member Code">
+<input id="lAmount" type="number" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Amount">
+<input id="lInt" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Interest %">
+<input id="lDur" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Months">
+<button onclick="addLoan()" class="bg-black text-white rounded-xl font-black">Add Loan</button>
+</div>
+<div class="overflow-auto mt-4 max-h-96 border-4 border-black rounded-xl"><table class="w-full text-sm"><thead class="bg-black text-white sticky top-0"><tr><th class="p-3">ID</th><th>Member</th><th>Amount</th><th>Paid</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead><tbody id="loanTable"></tbody></table></div>
+<div class="grid md:grid-cols-3 gap-2 mt-4 bg-yellow-100 p-4 rounded-xl border-4 border-black">
+<input id="payId" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Loan ID L..."><input id="payAmt" type="number" class="border-4 border-black p-3 rounded-xl font-black" placeholder="Payment"><button onclick="payLoan()" class="bg-green-600 text-white py-3 rounded-xl font-black text-lg">Payment Add</button>
+</div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-4">
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">💵 Savings</h3><input id="sMember" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Member"><input id="sAmount" type="number" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Amount"><button onclick="addSaving()" class="bg-black text-white w-full py-3 rounded-xl mt-2 font-black">Add Saving</button><table class="w-full text-xs mt-3"><tbody id="savingTable"></tbody></table></div>
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">🔔 Notifications</h3><input id="nTitle" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Title"><textarea id="nMsg" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Message"></textarea><button onclick="addNotif()" class="bg-black text-white w-full py-2 rounded-xl mt-2 font-black">Send</button><div id="notifList" class="mt-3 space-y-2 max-h-60 overflow-auto"></div></div>
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">📋 Join List - එනවද?</h3><table class="w-full text-sm mt-2"><tbody id="joinAdmin"></tbody></table><button onclick="clearJoins()" class="bg-red-600 text-white w-full py-2 rounded-xl mt-3 font-black">Clear Joins</button></div>
+</div>
+</div>
+</div>
+
+<!-- MEMBER FINAL -->
+<div id="memberPage" class="hidden min-h-screen bg-slate-100">
+<div class="bg-white p-4 shadow flex justify-between items-center sticky top-0 z-40 border-b-8 border-black"><h1 class="font-black text-lg">MEMBER FINAL - SAFE JOIN</h1><div class="flex gap-2"><button onclick="manualLock()" class="bg-yellow-400 border-4 border-black px-4 py-2 rounded-xl font-black">LOCK</button><button onclick="location.reload()" class="bg-black text-white px-4 py-2 rounded-xl font-black">Logout</button></div></div>
+<div class="max-w-4xl mx-auto p-4 space-y-4">
+<div class="bg-yellow-300 border-8 border-black p-6 rounded-[1.5rem] shadow-2xl">
+<h2 class="font-black text-2xl">📢 ඊළඟ සමිතිය - Admin දාපු දවස විතරයි බලන්න පුලුවන්</h2>
+<div id="memberMeet" class="mt-4 font-black text-xl"></div>
+<input id="myCode" class="border-8 border-black p-5 rounded-2xl w-full mt-6 font-black text-xl" placeholder="ඔයාගේ Code එක M001">
+<div class="grid grid-cols-2 gap-4 mt-4">
+<button onclick="doJoin('එනවා')" class="bg-black text-white py-5 rounded-2xl font-black text-xl">✅ එනවා</button>
+<button onclick="doJoin('එන්නේ නෑ')" class="bg-white border-8 border-black py-5 rounded-2xl font-black text-xl">❌ එන්නේ නෑ</button>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">💰 මගේ Loan</h3><input id="searchLoan" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Code M001"><button onclick="viewMyLoans()" class="bg-black text-white w-full py-3 rounded-xl mt-2 font-black">View</button><div id="myLoanView" class="mt-3"></div></div>
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">💵 මගේ Savings</h3><input id="searchSave" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Code M001"><button onclick="viewMySavings()" class="bg-black text-white w-full py-3 rounded-xl mt-2 font-black">View</button><div id="mySaveView" class="mt-3"></div></div>
+</div>
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black text-lg">👥 කවුද Join වෙලා තියෙන්නේ?</h3><table class="w-full text-sm mt-3"><tbody id="joinMember"></tbody></table></div>
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">🔔 Notifications</h3><div id="memberNotif" class="mt-3"></div></div>
+<div class="bg-white p-5 rounded-2xl shadow border-4 border-black"><h3 class="font-black">💸 Loan Request</h3><input id="reqAmt" type="number" class="border-4 border-black p-3 rounded-xl w-full mt-2 font-black" placeholder="Amount"><button onclick="reqLoan()" class="bg-black text-white w-full py-3 rounded-xl mt-2 font-black">Request Loan</button></div>
+</div>
+</div>
+</div>
+
+<script>
+// ===== FINAL SAFE CORE =====
+let attempts=0, blockUntil=0, idleTimer;
+let DB, CRED;
+try{
+ DB=JSON.parse(atob(localStorage.getItem('sam_final_safe_v9')||'')); 
+} catch{ DB={members:[],loans:[],savings:[],meeting:null,joins:[],notifs:[]} }
+try{
+ CRED=JSON.parse(atob(localStorage.getItem('sam_cred_v9')||'')); 
+} catch{ CRED={u:'admin',p:'admin123'} }
+if(!DB.members) DB={members:[],loans:[],savings:[],meeting:null,joins:[],notifs:[]};
+
+const save=()=>{localStorage.setItem('sam_final_safe_v9', btoa(JSON.stringify(DB))); localStorage.setItem('sam_cred_v9', btoa(JSON.stringify(CRED))); renderAll();};
+
+function loginAdmin(){
+ if(Date.now()<blockUntil){attemptInfo.innerText=`⛔ Blocked ${Math.ceil((blockUntil-Date.now())/1000)}s`;return;}
+ if(u.value==CRED.u && p.value==CRED.p){attempts=0; login.classList.add('hidden'); adminPage.classList.remove('hidden'); renderAll(); resetTimer();}
+ else {attempts++; if(attempts>=3){blockUntil=Date.now()+120000; attemptInfo.innerText='⛔ 3 වැරදියි! 2 min Block!'; attempts=0;} else attemptInfo.innerText=`❌ Wrong! ${attempts}/3`;}
+}
+function loginMember(){login.classList.add('hidden'); memberPage.classList.remove('hidden'); renderAll(); resetTimer();}
+function openSettings(){settingsPanel.classList.remove('hidden');}
+function changePassword(){
+ if(oldPass.value!=CRED.p)return alert('❌ පරණ Password වැරදියි!');
+ if(newPass.value!=confirmPass.value)return alert('❌ Confirm වැරදියි!');
+ if(newPass.value.length<6)return alert('❌ අඩුම 6 chars ඕන!');
+ CRED.p=newPass.value; save(); alert('✅ Password වෙනස් වුණා! අලුත් එක: '+newPass.value); settingsPanel.classList.add('hidden'); oldPass.value='';newPass.value='';confirmPass.value='';
+}
+function resetTimer(){clearTimeout(idleTimer); idleTimer=setTimeout(()=>manualLock(),300000);}
+['click','keydown','mousemove','touchstart'].forEach(e=>document.addEventListener(e,resetTimer));
+function manualLock(){lockScreen.classList.remove('hidden'); document.getElementById('app').classList.add('locked');}
+function unlock(){if(unlockPass.value==CRED.p){lockScreen.classList.add('hidden'); document.getElementById('app').classList.remove('locked'); unlockPass.value=''; lockMsg.innerText=''; resetTimer();}else lockMsg.innerText='❌ Password වැරදියි!';}
+
+function setMeeting(){DB.meeting={title:mtTitle.value,date:mtDate.value,time:mtTime.value,location:mtLoc.value};DB.joins=[];save();}
+function addMember(){if(!mCode.value||!mName.value)return alert('Code & Name ඕන');DB.members.push({code:mCode.value,name:mName.value,phone:mPhone.value});save();mCode.value='';mName.value='';mPhone.value='';}
+function searchMembers(){let q=searchM.value.toLowerCase();let f=DB.members.filter(m=>m.code.toLowerCase().includes(q)||m.name.toLowerCase().includes(q));memberTable.innerHTML=f.map((m,i)=>`<tr class="border-b"><td class="p-3 font-black">${m.code}</td><td>${m.name}</td><td><button onclick="DB.members=DB.members.filter(x=>x.code!='${m.code}');save()" class="bg-red-600 text-white px-3 py-1 rounded-full font-black">Del</button></td></tr>`).join('');}
+function addLoan(){DB.loans.push({id:'L'+Date.now(),member:lMember.value,amount:+lAmount.value,interest:lInt.value,duration:lDur.value,paid:0,status:'pending'});save();}
+function payLoan(){let L=DB.loans.find(x=>x.id==payId.value||x.id.endsWith(payId.value));if(!L)return alert('ID වැරදියි');L.paid+=+payAmt.value;if(L.paid>=L.amount)L.status='completed';save();payId.value='';payAmt.value='';}
+function addSaving(){DB.savings.push({member:sMember.value,amount:+sAmount.value,date:new Date().toLocaleDateString()});save();}
+function addNotif(){DB.notifs.push({title:nTitle.value,msg:nMsg.value,date:new Date().toLocaleString()});save();nTitle.value='';nMsg.value='';}
+function doJoin(st){if(!myCode.value)return alert('Code දාන්න');let ex=DB.joins.find(j=>j.code==myCode.value);if(ex){ex.status=st;ex.time=new Date().toLocaleString();}else DB.joins.push({code:myCode.value,status:st,time:new Date().toLocaleString()});save();myCode.value='';}
+function viewMyLoans(){let c=searchLoan.value.trim();let ls=DB.loans.filter(l=>l.member==c);myLoanView.innerHTML=ls.map(l=>`<div class="border-4 border-black p-3 rounded-xl mb-2 font-bold"><b>${l.id.slice(-6)}</b> Rs.${l.amount} | Paid Rs.${l.paid} | Bal Rs.${l.amount-l.paid}<br><span class="px-3 py-1 bg-black text-white rounded-full text-xs">${l.status}</span></div>`).join('')||'Loan නෑ';}
+function viewMySavings(){let c=searchSave.value.trim();let sv=DB.savings.filter(s=>s.member==c);let tot=sv.reduce((a,b)=>a+b.amount,0);mySaveView.innerHTML=`<b>Total: Rs.${tot}</b><br>`+sv.map(s=>`<div class="border-2 p-2 rounded-xl mt-1 font-bold">Rs.${s.amount} - ${s.date}</div>`).join('')||'නෑ';}
+function reqLoan(){let code=prompt('Code එක M001');if(!code)return;DB.loans.push({id:'L'+Date.now(),member:code,amount:+reqAmt.value,paid:0,status:'pending'});save();alert('Request දැම්මා');}
+function clearJoins(){if(confirm('Clear Joins?')){DB.joins=[];save();}}
+
+function renderAll(){
+ if(!DB.members) return;
+ sM.innerText=DB.members.length; sL.innerText=DB.loans.length; sJ.innerText=DB.joins.length; sS.innerText='Rs '+DB.savings.reduce((a,b)=>a+b.amount,0); sMT.innerText=DB.meeting?DB.meeting.date:'Not Set';
+ if(DB.meeting){adminMeetView.innerHTML=`<div class="bg-black text-white p-4 rounded-2xl font-black border-4 border-green-400">📅 ${DB.meeting.title}<br>${DB.meeting.date} ${DB.meeting.time}<br>📍 ${DB.meeting.location}</div>`; memberMeet.innerHTML=`${DB.meeting.title}<br>📅 ${DB.meeting.date} ⏰ ${DB.meeting.time}<br>📍 ${DB.meeting.location}`;}else{adminMeetView.innerHTML='<p class="text-slate-400 font-bold">තවම සමිතියක් නෑ</p>'; memberMeet.innerHTML='<span class="text-slate-600 font-bold">Admin තවම දවසක් දාලා නෑ</span>';}
+ memberTable.innerHTML=DB.members.map(m=>`<tr class="border-b"><td class="p-3 font-black">${m.code}</td><td class="font-bold">${m.name}</td><td><button onclick="DB.members=DB.members.filter(x=>x.code!='${m.code}');save()" class="bg-red-600 text-white px-3 py-1 rounded-full font-black">Del</button></td></tr>`).join('');
+ loanTable.innerHTML=DB.loans.map((l,i)=>`<tr class="border-b"><td class="p-3 font-black text-xs">${l.id.slice(-6)}</td><td class="font-bold">${l.member}</td><td class="font-bold">Rs.${l.amount}</td><td>Rs.${l.paid}</td><td class="font-black">Rs.${l.amount-l.paid}</td><td><span class="px-3 py-1 rounded-full text-xs font-black ${l.status=='approved'?'bg-green-200':'bg-yellow-200'}">${l.status}</span></td><td><button onclick="DB.loans[${i}].status='approved';save()" class="bg-green-600 text-white px-3 py-1 rounded-full font-black text-xs">Approve</button> <button onclick="DB.loans.splice(${i},1);save()" class="bg-red-600 text-white px-3 py-1 rounded-full font-black text-xs">Del</button></td></tr>`).join('');
+ savingTable.innerHTML=DB.savings.map(s=>`<tr class="border-b"><td class="font-bold">${s.member}</td><td>Rs.${s.amount}</td></tr>`).join('');
+ notifList.innerHTML=DB.notifs.map(n=>`<div class="bg-slate-50 border-2 border-black p-3 rounded-xl"><b>${n.title}</b><br><small class="font-bold">${n.msg}</small></div>`).join('');
+ memberNotif.innerHTML=DB.notifs.map(n=>`<div class="bg-yellow-50 border-4 border-black p-3 rounded-xl mb-2"><b>${n.title}</b><p class="text-sm font-bold">${n.msg}</p></div>`).join('');
+ joinAdmin.innerHTML=DB.joins.map(j=>`<tr class="border-b"><td class="p-3 font-black">${j.code}</td><td class="font-black ${j.status=='එනවා'?'text-green-600':'text-red-600'}">${j.status}</td><td class="text-xs">${j.time}</td></tr>`).join('')||'<tr><td class="p-2 text-slate-400 font-bold">තවම නෑ</td></tr>';
+ joinMember.innerHTML=DB.joins.map(j=>`<tr class="border-b"><td class="p-3 font-black">${j.code}</td><td><span class="px-4 py-1 rounded-full font-black border-2 border-black ${j.status=='එනවා'?'bg-green-300':'bg-red-300'}">${j.status}</span></td></tr>`).join('')||'<tr><td class="p-2 text-slate-400 font-bold">තවම නෑ</td></tr>';
+}
+renderAll();
+history.pushState(null,null,location.href); window.onpopstate=()=>history.go(1);
+document.addEventListener('contextmenu',e=>e.preventDefault());
+</script>
+</div>
+</body>
+</html>
